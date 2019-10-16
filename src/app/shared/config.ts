@@ -1,3 +1,3 @@
 export const config = {
-    baseUrl: "http://localhost:3000"
+    baseUrl: "https://warm-chamber-13383.herokuapp.com"
 }
