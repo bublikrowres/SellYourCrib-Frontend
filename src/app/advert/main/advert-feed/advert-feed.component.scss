@@ -1,0 +1,31 @@
+:host {
+    display: flex;
+    justify-content: center;
+    margin: 15px auto;
+    .price {
+        text-align: center;
+    }
+    [mat-card-image] {
+        max-height: 600px;
+    }
+    .sold {
+        background-color: whitesmoke;
+        opacity: 0.8;
+    }
+    .soldView {
+        position: absolute;
+        right: 0;
+        font-size: 5rem;
+        z-index: -1;
+        color: red;
+    }
+    .contact {
+        position: absolute;
+        right: 30px;
+    }
+    @media screen and (min-width: 1024px) {
+        .container {
+            width: 70%;
+        }
+    }
+}

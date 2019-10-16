@@ -1,0 +1,7 @@
+<h1>Sell your crib</h1>
+<h4 [ngClass]="{'show': messageAlert}" class="message">{{userMessage}}</h4>
+<h4 [ngClass]="{'show': errorAlert}" class="error">{{error}}</h4>
+<app-new-advert (refresh)="refreshAdverts()" (message)="updateMessage($event)" (error)="displayError($event)"></app-new-advert>
+<app-edit-advert (refresh)="refreshAdverts()" (message)="updateMessage($event)" (error)="displayError($event)"></app-edit-advert>
+<button mat-raised-button color="primary" (click)="refreshAdverts()">Refresh ads</button>
+<app-advert-feed class="advertDisplay" *ngFor="let item of advertsArray" [advert]="item"></app-advert-feed>

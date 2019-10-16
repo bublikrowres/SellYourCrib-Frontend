@@ -1,0 +1,29 @@
+:host {
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+    mat-card {
+        width: 80%;
+    }
+    .container {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+    }
+    .textareaLimit {
+        position: absolute;
+        font-size: 0.8rem;
+        right: 0;
+        bottom: 0;
+    }
+    textarea {
+        resize: none;
+    }
+    .inputForm {
+        width: 60%;
+    }
+    .inputFormSmall {
+        width: 40%;
+        align-self: center;
+    }
+}
