@@ -10,49 +10,51 @@
         </mat-form-field>
         <mat-form-field class="inputFormSmall">
             <input name="phoneNumber" type="text" matInput placeholder="Your phone Number" formControlName="phoneNumber">
+            <mat-error *ngIf="advertForm.controls.phoneNumber.errors && advertForm.controls.phoneNumber.errors.required">Phone Number is required</mat-error>
         </mat-form-field>
         <mat-form-field class="inputForm">
             <textarea required #title maxlength="150" rows="2" name="title" type="text" matInput placeholder="Ad title" formControlName="title"></textarea>
             <mat-error *ngIf="advertForm.controls.title.errors && advertForm.controls.title.errors.required">Title is required</mat-error>
+            <mat-error *ngIf="advertForm.controls.title.errors && advertForm.controls.title.errors.maxLength">Max length is 150 char</mat-error>
             <span class="textareaLimit">{{150 - title.value.length}}</span>
         </mat-form-field>
         <mat-form-field class="inputForm">
             <textarea required #description maxlength="500" rows="6" name="description" type="text" matInput placeholder="Ad description" formControlName="description"></textarea>
             <mat-error *ngIf="advertForm.controls.description.errors && advertForm.controls.description.errors.required">Description is required</mat-error>
+            <mat-error *ngIf="advertForm.controls.description.errors && advertForm.controls.description.errors.maxLength">Max length is 500 char</mat-error>
             <span class="textareaLimit">{{500 - description.value.length}}</span>
         </mat-form-field>
         <label class="inputForm">Address</label>
         <mat-form-field class="inputForm">
-            <input name="firstLine" type="text" matInput placeholder="First Line of address" formControlName="firstLine">
+            <input required name="firstLine" type="text" matInput placeholder="First Line of address" formControlName="firstLine">
+            <mat-error *ngIf="advertForm.controls.firstLine.errors && advertForm.controls.firstLine.errors.required">This field is required</mat-error>
         </mat-form-field>
         <mat-form-field class="inputForm">
             <input name="secondLine" type="text" matInput placeholder="Second Line of address" formControlName="secondLine">
         </mat-form-field>
         <mat-form-field class="inputFormSmall">
-            <input name="city" type="text" matInput placeholder="City" formControlName="city">
+            <input required name="city" type="text" matInput placeholder="City" formControlName="city">
+            <mat-error *ngIf="advertForm.controls.city.errors && advertForm.controls.city.errors.required">City is required</mat-error>
         </mat-form-field>
         <mat-form-field class="inputFormSmall">
-            <input name="country" type="text" matInput placeholder="Country" formControlName="country">
+            <input required name="country" type="text" matInput placeholder="Country" formControlName="country">
+            <mat-error *ngIf="advertForm.controls.country.errors && advertForm.controls.country.errors.required">Country is required</mat-error>
         </mat-form-field>
-        <label class="inputForm">Number of rooms</label>
+        <label required class="inputForm">Number of rooms</label>
+        <mat-form-field class="inputFormSmall">
+            <input required name="rooms" type="text" matInput placeholder="Number of rooms" formControlName="rooms">
+            <mat-error *ngIf="advertForm.controls.rooms.errors && advertForm.controls.rooms.errors.required">Number of rooms is required</mat-error>
+            <mat-error *ngIf="advertForm.controls.rooms.errors && advertForm.controls.rooms.errors.min">Minimum number of rooms is 1</mat-error>
+            <mat-error *ngIf="advertForm.controls.rooms.errors && advertForm.controls.rooms.errors.max">Maximum number of rooms is 3</mat-error>
+        </mat-form-field>
+        <label class="inputForm" for="imagesInput">Upload Images (please select multiple at once</label>
         <br>
-        <mat-radio-group class="inputForm" formControlName="rooms">
-            <mat-radio-button value="1">1 room</mat-radio-button>
-            <mat-radio-button value="2">2 rooms</mat-radio-button>
-            <mat-radio-button value="3">3 rooms</mat-radio-button>
-        </mat-radio-group>
-        <br>
-        <label class="inputForm">Images of the apartment</label>
+        <input required name="images" type="file" multiple accept="image/*" (change)="registerPhoto($event)">
+        <p>{{uploadMessage}} </p>
 
-        <mat-form-field class="inputForm" *ngFor="let item of imagesArray; let i = index">
-            <input type="text" name="image{{i+1}}" matInput placeholder="Image url {{i+1}}" [value]="imagesArray[i]" (input)="updateImageArray(i,$event)">
-        </mat-form-field>
-        <div>
-            <button mat-mini-fab color="primary" (click)="addAnotherImageInput()">+</button> |
-            <button mat-mini-fab color="primary" (click)="removeLastImageInput()">-</button>
-        </div>
         <mat-form-field class="inputFormSmall">
-            <input name="price" type="text" matInput placeholder="Price of the apartment" formControlName="price">
+            <input required name="price" type="text" matInput placeholder="Price of the apartment" formControlName="price">
+            <mat-error *ngIf="advertForm.controls.price.errors && advertForm.controls.price.errors.required">Price is required</mat-error>
         </mat-form-field>
         <button mat-raised-button color="primary" (click)="getData()">submit</button>
     </form>

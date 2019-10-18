@@ -3,7 +3,7 @@ export class Advert {
     title: string;
     description: string;
     rooms?: string;
-    images?: string[];
+    images?: [];
     address?: {
         firstLine: string,
         secondLine: string,

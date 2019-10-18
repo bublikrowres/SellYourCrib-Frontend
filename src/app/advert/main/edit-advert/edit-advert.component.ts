@@ -46,10 +46,7 @@ export class EditAdvertComponent implements OnInit {
   }
 
   getAdvert(){
-    if(this.editForm.status === 'INVALID'){
-      console.log('form is invalid')
-    }
-    else{
+      if(this.editForm.status === 'VALID'){
       this.editRequest = this.editForm.value;
       this.advertService.sendEdit(this.editRequest).subscribe((data)=>{
         this.previewAd.title = data['title'];
@@ -70,6 +67,7 @@ export class EditAdvertComponent implements OnInit {
         this.commands = false;
         this.editInfo = false;
         this.message.emit(data['result'])
+        this.editForm.reset();
         this.refresh.emit()
       },(err)=>{
         this.error.emit(err.error.error)
@@ -79,10 +77,10 @@ export class EditAdvertComponent implements OnInit {
   deleteAd(){
     this.editRequest = this.editForm.value;
       this.advertService.deleteAdvert(this.editRequest).subscribe((data)=>{
-        console.log(data)
         this.commands = false;
         this.editInfo = false;
         this.message.emit(data['result'])
+        this.editForm.reset();
         this.refresh.emit()
       },(err)=>{
         this.error.emit(err.error.error)
@@ -102,6 +100,7 @@ export class EditAdvertComponent implements OnInit {
     this.commands = false;
     this.previewAd = {};
     this.editRequest = {}
+    this.editForm.reset();
     this.message.emit('Cancelled')
   }
 }

@@ -8,6 +8,7 @@ import { Advert } from "../shared/models/advert";
 })
 export class AdvertService {
   url: string = `${config.baseUrl}/anunt`;
+  uploadUrl: string = `${config.baseUrl}`;
 
   constructor(
     private http: HttpClient
@@ -23,6 +24,10 @@ export class AdvertService {
     return this.http.post<Advert>(this.url,advert);
   }
 
+  uploadImages(formData){
+    return this.http.post(`${this.uploadUrl}/features/upload`,formData);
+  }
+
   sendEdit(editRequest){
     const email = editRequest.email;
     const ref = editRequest.ref;
@@ -34,10 +39,11 @@ export class AdvertService {
     const ref = editRequest.ref;
     return this.http.put(`${this.url}`,{email,ref});
   }
+
   deleteAdvert(editRequest){
     const email = editRequest.email;
     const ref = editRequest.ref;
-    return this.http.post(`${this.url}/delete`,{email,ref});
+    return this.http.delete(`${this.url}/${ref}/${email}`);
 
   }
 

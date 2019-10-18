@@ -15,7 +15,10 @@ export class NewAdvertComponent implements OnInit {
   @Output() error = new EventEmitter;
  
   add: boolean = false;
-  imagesArray= [' ',' '];
+  fileData: Array<File> = null;
+  uploadMessage: string = '';
+
+  imageCount = 0;
   advert:Advert = {
     email : '',
     title : '',
@@ -60,11 +63,13 @@ export class NewAdvertComponent implements OnInit {
         ]),
       'rooms': new FormControl(this.advert.rooms,
         [
-          
+          Validators.required,
+          Validators.max(3),
+          Validators.min(1),
         ]),
       'firstLine': new FormControl(this.advert.address.firstLine,
         [
-          
+          Validators.required,
         ]),
       'secondLine': new FormControl(this.advert.address.secondLine,
         [
@@ -72,15 +77,15 @@ export class NewAdvertComponent implements OnInit {
         ]),
       'city': new FormControl(this.advert.address.city,
         [
-          
+          Validators.required,
         ]),
       'country': new FormControl(this.advert.address.country,
         [
-          
+          Validators.required,
         ]),
       'price': new FormControl(this.advert.price,
         [
-          
+          Validators.required,
         ]),
     });
   }
@@ -88,19 +93,27 @@ export class NewAdvertComponent implements OnInit {
   addAdvert(){
     !this.add ? this.add = true : this.add= false 
   }
-  addAnotherImageInput(){
-    this.imagesArray.push('');
-  }
-  removeLastImageInput(){
-    this.imagesArray.pop();
+
+  registerPhoto(fileInput: any){
+    this.imageCount = fileInput.target.files.length;
+    if(this.imageCount<2){
+      return this.uploadMessage = 'Min 2 images please'
+    }
+    for(let i=0; i<fileInput.target.files.length; i++){
+      if(!fileInput.target.files[i].type.match(/image\/*/)){
+        return this.uploadMessage = 'File is not of type image'
+      } 
+      if(fileInput.target.files[i].size>1000000){
+        return this.uploadMessage = 'File is to big(>1MB)'
+      }
+    }
+    this.fileData = fileInput.target.files;
+    this.uploadMessage = 'All files are good'
   }
 
   getData(){
-    if(this.advertForm.status === 'INVALID'){
-      console.log('form is invalid')
-    }
-    else{
-      this.advert.title = this.advertForm.value.title;
+    if(this.advertForm.status === 'VALID'){
+            this.advert.title = this.advertForm.value.title;
       this.advert.email = this.advertForm.value.email;
       this.advert.phoneNumber = this.advertForm.value.phoneNumber;
       this.advert.description = this.advertForm.value.description;
@@ -110,20 +123,30 @@ export class NewAdvertComponent implements OnInit {
       this.advert.address.secondLine = this.advertForm.value.secondLine;
       this.advert.address.city = this.advertForm.value.city;
       this.advert.address.country = this.advertForm.value.country;
-      this.advert.images = this.imagesArray; 
-      this.createAdvert()
+      this.uploadImages()
     }
   }
 
-  updateImageArray(i,event){
-    this.imagesArray[i] = event.target.value;
+  async uploadImages(){
+    const formData:any = new FormData();
+    const files: Array<File> = this.fileData;
+    for(let i =0; i < files.length; i++){
+      formData.append(`uploads`, files[i], files[i]['name']);
+    }
+    await this.advertService.uploadImages(formData).subscribe((data)=>{
+        this.advert.images = data['imageArray'];
+        this.createAdvert()
+      },(err)=>{
+        this.error.emit(err.error.error)
+      });
   }
 
   async createAdvert(){
       await this.advertService.createAdvert(this.advert).subscribe((data)=>{
         this.addAdvert()
+        this.message.emit('Ad created\n\n We\'ve sent you an email with the ref code.')
+        this.advertForm.reset();
         this.refresh.emit()
-        this.message.emit('Ad created')
       },(err)=>{
         this.error.emit(err.error.error)
       });
